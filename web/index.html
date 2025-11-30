@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nítido - Descifra documentos legales</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <nav>
+    <div class="logo">Nítido</div>
+    <div class="links">
+      <a href="#funciona">Cómo funciona</a>
+      <a href="#app">Probar</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <h1>Documentos legales<br><span>en español simple</span></h1>
+    <p>Pega un contrato, términos y condiciones, o carta bancaria. Nítido te dice —en simple— qué estás firmando.</p>
+    <a href="#app" class="btn">Analizar un documento</a>
+  </section>
+
+  <section id="funciona" class="features">
+    <h2>Cómo funciona</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="icon">📄</div>
+        <h3>Pega o sube</h3>
+        <p>Términos de un sitio web, contrato de arriendo, póliza de Isapre, carta del banco.</p>
+      </div>
+      <div class="card">
+        <div class="icon">🤖</div>
+        <h3>IA analiza</h3>
+        <p>Usamos IA entrenada con leyes chilenas y jurisprudencia del SERNAC.</p>
+      </div>
+      <div class="card">
+        <div class="icon">✅</div>
+        <h3>Recibe el TL;DR</h3>
+        <p>Resumen en simple, cláusulas de riesgo, glosario y recomendaciones.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="app" class="app-section">
+    <h2>Analiza un documento</h2>
+    <p class="subtitle">Pega el texto o sube un PDF</p>
+    <textarea id="input" placeholder="Pega aquí el texto del contrato, términos y condiciones, carta bancaria, etc..."></textarea>
+    <button id="analyzeBtn">Analizar</button>
+    <div id="loading" style="display:none;text-align:center;padding:20px;color:#64748b">Analizando...</div>
+    <div id="result"></div>
+  </section>
+
+  <footer>
+    <p>Nítido &mdash; Proyecto de título. No constituye asesoría legal profesional.</p>
+  </footer>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
