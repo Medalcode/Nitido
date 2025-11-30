@@ -3,56 +3,93 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nítido - Descifra documentos legales</title>
+  <title>Nítido — Descifra documentos legales</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <nav>
-    <div class="logo">Nítido</div>
+    <div class="logo">Nítido <span class="beta">beta</span></div>
     <div class="links">
-      <a href="#funciona">Cómo funciona</a>
-      <a href="#app">Probar</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#analizar">Probar</a>
     </div>
   </nav>
 
   <section class="hero">
     <h1>Documentos legales<br><span>en español simple</span></h1>
     <p>Pega un contrato, términos y condiciones, o carta bancaria. Nítido te dice —en simple— qué estás firmando.</p>
-    <a href="#app" class="btn">Analizar un documento</a>
+    <a href="#analizar" class="btn">Analizar un documento</a>
   </section>
 
-  <section id="funciona" class="features">
+  <section id="como-funciona" class="features">
     <h2>Cómo funciona</h2>
     <div class="grid">
       <div class="card">
         <div class="icon">📄</div>
         <h3>Pega o sube</h3>
-        <p>Términos de un sitio web, contrato de arriendo, póliza de Isapre, carta del banco.</p>
+        <p>Términos de un sitio web, contrato de arriendo, póliza de Isapre, carta bancaria o PDF.</p>
       </div>
       <div class="card">
-        <div class="icon">🤖</div>
+        <div class="icon">⚖️</div>
         <h3>IA analiza</h3>
-        <p>Usamos IA entrenada con leyes chilenas y jurisprudencia del SERNAC.</p>
+        <p>Usamos IA entrenada con leyes chilenas (Ley 19.496) y jurisprudencia del SERNAC.</p>
       </div>
       <div class="card">
         <div class="icon">✅</div>
         <h3>Recibe el TL;DR</h3>
-        <p>Resumen en simple, cláusulas de riesgo, glosario y recomendaciones.</p>
+        <p>Resumen en español simple, cláusulas de riesgo, glosario legal y recomendaciones.</p>
       </div>
     </div>
   </section>
 
-  <section id="app" class="app-section">
+  <section id="analizar" class="app-section">
     <h2>Analiza un documento</h2>
-    <p class="subtitle">Pega el texto o sube un PDF</p>
-    <textarea id="input" placeholder="Pega aquí el texto del contrato, términos y condiciones, carta bancaria, etc..."></textarea>
-    <button id="analyzeBtn">Analizar</button>
-    <div id="loading" style="display:none;text-align:center;padding:20px;color:#64748b">Analizando...</div>
+    <p class="subtitle">Pega el texto o arrastra un PDF</p>
+
+    <div class="drop-zone" id="dropZone">
+      <div class="drop-content">
+        <div class="drop-icon">📄</div>
+        <p>Arrastra un PDF aquí o <span class="link">selecciona un archivo</span></p>
+        <p class="drop-hint">Solo PDF, máximo 10 MB</p>
+      </div>
+      <input type="file" id="fileInput" accept=".pdf" hidden>
+    </div>
+
+    <div class="divider"><span>o pega el texto</span></div>
+
+    <textarea id="input" placeholder="Pega aquí el texto del contrato, términos y condiciones, carta bancaria..."></textarea>
+    <button id="analyzeBtn" class="btn-primary">Analizar</button>
+
+    <div id="loading" class="loading-section" style="display:none">
+      <div class="spinner"></div>
+      <p>Analizando documento...</p>
+      <p class="loading-sub">Esto toma unos segundos</p>
+    </div>
+
     <div id="result"></div>
   </section>
 
+  <section class="trust">
+    <h2>¿Por qué confiar?</h2>
+    <div class="trust-grid">
+      <div class="trust-item">
+        <strong>Ley 19.496</strong>
+        <span>Basado en la Ley de Protección al Consumidor chilena</span>
+      </div>
+      <div class="trust-item">
+        <strong>SERNAC</strong>
+        <span>Criterios actualizados de cláusulas abusivas</span>
+      </div>
+      <div class="trust-item">
+        <strong>Privacidad</strong>
+        <span>No guardamos tus documentos. El análisis es anónimo.</span>
+      </div>
+    </div>
+  </section>
+
   <footer>
-    <p>Nítido &mdash; Proyecto de título. No constituye asesoría legal profesional.</p>
+    <p>Nítido — Proyecto de titulo. No sustituye asesoría legal profesional.</p>
+    <p class="footer-links">Hecho en Chile 🇨🇱</p>
   </footer>
 
   <script src="js/app.js"></script>

@@ -10,7 +10,7 @@ class RiskLevel(str, Enum):
     CRITICO = "critico"
 
 
-class Clausula(BaseModel):
+class ClausulaResult(BaseModel):
     texto_original: str
     texto_simple: str
     riesgo: RiskLevel
@@ -19,15 +19,21 @@ class Clausula(BaseModel):
 
 
 class AnalisisRequest(BaseModel):
-    contenido: str
-    tipo_documento: str | None = None
+    contenido: str = Field(..., min_length=10, description="Texto del documento legal a analizar")
+    tipo_documento: str | None = Field(None, description="contrato, tyc, bancario, isapre, otro")
     contexto: str | None = None
 
 
 class AnalisisResponse(BaseModel):
     resumen: str
-    clausulas: list[Clausula]
+    clausulas: list[ClausulaResult]
     glosario: dict[str, str]
     puntaje_riesgo: int
+    total_clausulas: int
     recomendaciones: list[str]
     timestamp: datetime = Field(default_factory=datetime.now)
+
+
+class ErrorResponse(BaseModel):
+    error: str
+    detalle: str | None = None
