@@ -11,8 +11,8 @@ Semestre: Noviembre 2025 — Febrero 2026
 - Landing page web
 
 ## Diciembre
-- Chrome extension funcional
-- Corpus legal chileno (vector store)
+- [x] Chrome extension funcional
+- [x] Corpus legal chileno (vector store RAG con ChromaDB)
 - Tests del backend
 - Despliegue en Vercel/Render
 

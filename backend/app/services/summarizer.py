@@ -4,10 +4,13 @@ from app.config import settings
 
 logger = logging.getLogger(__name__)
 
-PROMPT_RESUMEN = """Eres un asist experto en simplificar documentos legales chilenos.
+PROMPT_RESUMEN = """Eres un asistente experto en simplificar documentos legales chilenos.
 
 DOCUMENTO:
 {contenido}
+
+CONTEXTO LEGAL DE REFERENCIA (Leyes y Jurisprudencia):
+{contexto_legal}
 
 Debes devolver SOLO un objeto JSON válido con esta estructura exacta, sin markdown ni explicaciones:
 {{
@@ -16,7 +19,7 @@ Debes devolver SOLO un objeto JSON válido con esta estructura exacta, sin markd
   "recomendaciones": ["recomendación 1", "recomendación 2", ...]
 }}
 
-Usa español ciudadano. Piensa que le explicas a un familiar. Basate en la Ley 19.496."""
+Usa español ciudadano. Piensa que le explicas a un familiar. Basa tu análisis en la Ley 19.496 y el contexto entregado."""
 
 
 class LegalSummarizer:
@@ -24,7 +27,7 @@ class LegalSummarizer:
         self.gemini_key = gemini_key
         self.groq_key = groq_key
 
-    async def resumir(self, contenido: str) -> dict:
+    async def resumir(self, contenido: str, contexto_legal: str = "") -> dict:
         contenido = contenido[:settings.max_document_length]
 
         if settings.mock_mode:
@@ -32,23 +35,23 @@ class LegalSummarizer:
 
         if self.gemini_key:
             try:
-                return await self._resumir_con_gemini(contenido)
+                return await self._resumir_con_gemini(contenido, contexto_legal)
             except Exception as e:
                 logger.warning("Gemini falló, intentando Groq: %s", e)
 
         if self.groq_key:
             try:
-                return await self._resumir_con_groq(contenido)
+                return await self._resumir_con_groq(contenido, contexto_legal)
             except Exception as e:
                 logger.warning("Groq también falló: %s", e)
 
         return self._mock_response(contenido)
 
-    async def _resumir_con_gemini(self, contenido: str) -> dict:
+    async def _resumir_con_gemini(self, contenido: str, contexto_legal: str) -> dict:
         from google import genai
 
         client = genai.Client(api_key=self.gemini_key)
-        prompt = PROMPT_RESUMEN.format(contenido=contenido)
+        prompt = PROMPT_RESUMEN.format(contenido=contenido, contexto_legal=contexto_legal or "No hay contexto adicional.")
         response = client.models.generate_content(
             model="gemini-2.0-flash",
             contents=prompt,
@@ -56,10 +59,10 @@ class LegalSummarizer:
         )
         return self._parsear_respuesta(response.text)
 
-    async def _resumir_con_groq(self, contenido: str) -> dict:
+    async def _resumir_con_groq(self, contenido: str, contexto_legal: str) -> dict:
         import httpx
 
-        prompt = PROMPT_RESUMEN.format(contenido=contenido)
+        prompt = PROMPT_RESUMEN.format(contenido=contenido, contexto_legal=contexto_legal or "No hay contexto adicional.")
         async with httpx.AsyncClient(timeout=60) as client:
             resp = await client.post(
                 "https://api.groq.com/openai/v1/chat/completions",

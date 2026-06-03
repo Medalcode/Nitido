@@ -1,0 +1,126 @@
+{
+  "clausulas_abusivas": [
+    {
+      "nombre": "ingreso sin aviso",
+      "patron": "el arrendador podrá ingresar al inmueble sin previo aviso",
+      "fundamento": "Violación del derecho a la inviolabilidad del hogar (Art. 19 N°5 CPR)."
+    },
+    {
+      "nombre": "no devolución",
+      "patron": "no se aceptan devoluciones bajo ninguna circunstancia",
+      "fundamento": "Contraviene la garantía legal de productos (Ley 19.496 Art. 20)."
+    },
+    {
+      "nombre": "renuncia acciones legales",
+      "patron": "renuncia a cualquier acción legal",
+      "fundamento": "Renuncia anticipada de derechos es nula (Ley 19.496 Art. 16)."
+    },
+    {
+      "nombre": "modificación unilateral",
+      "patron": "se reserva el derecho de modificar unilateralmente",
+      "fundamento": "Modificación unilateral del contrato es abusiva (Ley 19.496 Art. 16 letra a)."
+    },
+    {
+      "nombre": "cargos ocultos",
+      "patron": "cargos adicionales no especificados",
+      "fundamento": "Omisión de información relevante (Ley 19.496 Art. 3)."
+    },
+    {
+      "nombre": "renuncia garantía",
+      "patron": "renuncia a la garantía legal",
+      "fundamento": "Renuncia a garantía legal es nula (Ley 19.496 Art. 16)."
+    },
+    {
+      "nombre": "prórroga automática",
+      "patron": "prórroga automática sin consentimiento",
+      "fundamento": "Prórroga automática sin derecho a término anticipado es abusiva (Ley 19.496 Art. 16)."
+    },
+    {
+      "nombre": "comisiones no informadas",
+      "patron": "cobro de comisiones no informadas",
+      "fundamento": "Omisión de información esencial (Ley 19.496 Art. 3)."
+    },
+    {
+      "nombre": "responsabilidad limitada",
+      "patron": "responsabilidad limitada al monto pagado",
+      "fundamento": "Limitación de responsabilidad es abusiva (Ley 19.496 Art. 16 letra d)."
+    },
+    {
+      "nombre": "cesión datos",
+      "patron": "cesión de datos personales sin autorización",
+      "fundamento": "Violación a la Ley 19.628 sobre protección de datos personales."
+    }
+  ],
+  "patrones_riesgo": [
+    {
+      "nombre": "renuncia de derechos",
+      "patron": "renuncia(?:r)?\\s+(?:a\\s+|de\\s+)?(?:todo|todos|cualquier|sus|los)\\s+derecho",
+      "riesgo": "Alto",
+      "fundamento": "Renuncia anticipada de derechos del consumidor es nula (Ley 19.496 Art. 16 letra b).",
+      "sugerencia": "Solicitar la eliminación de esta cláusula. Es nula por ley."
+    },
+    {
+      "nombre": "modificación unilateral",
+      "patron": "modificar\\s+unilateralmente|(?:reservarse|cambiar)\\s+sin\\s+(?:previo\\s+)?(?:aviso|consentimiento)",
+      "riesgo": "Alto",
+      "fundamento": "La modificación unilateral del contrato es abusiva (Ley 19.496 Art. 16 letra a).",
+      "sugerencia": "Exigir que cualquier modificación requiera aprobación por escrito."
+    },
+    {
+      "nombre": "cobro no informado",
+      "patron": "cargos?\\s+(?:adicionales?|no\\s+especificados?|extraordinarios)|comisiones?\\s+no\\s+informadas?",
+      "riesgo": "Alto",
+      "fundamento": "Cobros no informados vulneran el derecho a información veraz (Ley 19.496 Art. 3).",
+      "sugerencia": "Solicitar detalle completo de todos los costos antes de firmar."
+    },
+    {
+      "nombre": "prórroga automática",
+      "patron": "pr[óo]rroga\\s+autom[áa]tica|renovaci[óo]n\\s+autom[áa]tica",
+      "riesgo": "Medio",
+      "fundamento": "Prórroga automática sin derecho a término anticipado puede ser abusiva.",
+      "sugerencia": "Pedir que la renovación requiera confirmación expresa."
+    },
+    {
+      "nombre": "renuncia garantía legal",
+      "patron": "renuncia\\s+(?:a\\s+)?(?:la\\s+)?garant[íi]a\\s+legal",
+      "riesgo": "Crítico",
+      "fundamento": "La renuncia a la garantía legal es nula absolutamente (Ley 19.496 Art. 16).",
+      "sugerencia": "Esta cláusula es nula. La garantía legal es irrenunciable."
+    },
+    {
+      "nombre": "inversión carga prueba",
+      "patron": "invierte\\s+la\\s+carga\\s+de\\s+la\\s+prueba|el\\s+consumidor\\s+deber[áa]\\s+probar",
+      "riesgo": "Crítico",
+      "fundamento": "Inversión de la carga de la prueba en perjuicio del consumidor es nula (Ley 19.496 Art. 16 letra c).",
+      "sugerencia": "Esta cláusula es nula. El proveedor debe probar."
+    },
+    {
+      "nombre": "tribunales distintos",
+      "patron": "someterse?\\s+a\\s+(?:los\\s+)?tribunales?\\s+de\\s+(?!su\\s+domicilio)",
+      "riesgo": "Alto",
+      "fundamento": "Obligar al consumidor a tribunales distintos de su domicilio es abusivo (Ley 19.496 Art. 16 letra g).",
+      "sugerencia": "Solicitar que las disputas se resuelvan en el domicilio del consumidor."
+    }
+  ],
+  "simplificaciones": {
+    "\\ben\\s+consecuencia\\b": "por lo tanto",
+    "\\ba\\s+saber\\b": "es decir",
+    "\\btoda\\s+vez\\s+que\\b": "ya que",
+    "\\bcon\\s+arreglo\\s+a\\b": "de acuerdo con",
+    "\\ben\\s+el\\s+supuesto\\s+(?:de\\s+)?que\\b": "si",
+    "\\bno\\s+obstante\\b": "sin embargo",
+    "\\basimismo\\b": "también",
+    "\\bde\\s+conformidad\\s+con\\b": "según",
+    "\\ben\\s+lo\\s+sucesivo\\b": "de ahora en adelante",
+    "\\ba\\s+los\\s+efectos\\s+de\\b": "para",
+    "\\bdicho\\s+(?:contrato|documento|acuerdo)\\b": "este documento",
+    "\\bel\\s+(?:suscrito|compareciente|contratante)\\b": "la persona",
+    "\\bla\\s+(?:suscrita|compareciente|contratante)\\b": "la persona",
+    "\\bprevio\\s+pago\\b": "antes de pagar",
+    "\\bposterior\\s+pago\\b": "después de pagar",
+    "\\ben\\s+forma\\s+inmediata\\b": "de inmediato",
+    "\\ba\\s+la\\s+fecha\\s+de\\s+cierre\\b": "al final",
+    "\\bcon\\s+posterioridad\\b": "después",
+    "\\bcon\\s+anterioridad\\b": "antes"
+  }
+}

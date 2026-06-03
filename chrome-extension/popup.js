@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:8000/api/v1";
+const IS_DEV = true;
+const API_URL = IS_DEV ? "http://localhost:8000/api/v1" : "https://api.nitido.cl/api/v1";
 
 const input = document.getElementById("input");
 const analyzeBtn = document.getElementById("analyzeBtn");
@@ -19,13 +20,22 @@ getPageBtn.addEventListener("click", async () => {
     {
       target: { tabId: tab.id },
       func: () => {
-        const paragraphs = document.querySelectorAll("p, li, td, th, span, div");
         let text = "";
-        for (const el of paragraphs) {
-          const t = el.innerText.trim();
-          if (t.length > 40) text += t + "\n";
+        const article = document.querySelector('article, main, .content, #content, .legal-text');
+        
+        if (article) {
+          text = article.innerText;
+        } else {
+          // Fallback clonando body para eliminar elementos ruidosos
+          const clone = document.body.cloneNode(true);
+          const removeSelectors = clone.querySelectorAll('nav, footer, header, script, style, noscript, iframe, .sidebar, .menu');
+          removeSelectors.forEach(el => el.remove());
+          text = clone.innerText;
         }
-        return text.substring(0, 15000);
+        
+        // Limpiar el texto de saltos de línea excesivos
+        text = text.replace(/\n{3,}/g, '\n\n').trim();
+        return text.substring(0, 45000); // Ajustado al límite del backend
       },
     },
     (results) => {

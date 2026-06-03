@@ -39,7 +39,12 @@ async def analizar_documento(request: AnalisisRequest):
         clausulas_analizadas = risk_detector.analizar(clausulas_raw)
         logger.debug("Cláusulas analizadas: %d con riesgo", sum(1 for c in clausulas_analizadas if c.get("riesgo") in ("alto", "critico")))
 
-        resumen_data = await summarizer.resumir(contenido)
+        # Búsqueda semántica en el Corpus
+        resultados_corpus = corpus.buscar(contenido[:1000], n_resultados=3)
+        contexto_legal = "\n".join([f"- {r['extracto']}" for r in resultados_corpus])
+        logger.debug("Contexto legal encontrado: %d fragmentos", len(resultados_corpus))
+
+        resumen_data = await summarizer.resumir(contenido, contexto_legal)
 
         clausulas_result = []
         for c in clausulas_analizadas:
