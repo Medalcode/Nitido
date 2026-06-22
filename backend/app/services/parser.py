@@ -7,6 +7,13 @@ try:
 except ImportError:
     PdfReader = None
 
+try:
+    from pdf2image import convert_from_bytes
+    import pytesseract
+except ImportError:
+    convert_from_bytes = None
+    pytesseract = None
+
 logger = logging.getLogger(__name__)
 
 
@@ -20,8 +27,23 @@ class DocumentParser:
             page_text = page.extract_text()
             if page_text:
                 texto.append(page_text)
-            logger.debug("Página %d extraída: %d caracteres", i + 1, len(page_text))
-        return "\n".join(texto)
+            logger.debug("Página %d extraída: %d caracteres", i + 1, len(page_text) if page_text else 0)
+            
+        texto_final = "\n".join(texto).strip()
+        
+        if len(texto_final) < 50 and convert_from_bytes is not None and pytesseract is not None:
+            logger.info("PDF sin texto seleccionable detectado. Iniciando OCR...")
+            try:
+                images = convert_from_bytes(content)
+                ocr_text = []
+                for img in images:
+                    ocr_text.append(pytesseract.image_to_string(img, lang="spa"))
+                texto_final = "\n".join(ocr_text).strip()
+                logger.info("OCR completado. Caracteres extraídos: %d", len(texto_final))
+            except Exception as e:
+                logger.error("Error durante OCR: %s", e)
+                
+        return texto_final
 
     def parse_text(self, content: str) -> str:
         return content.strip()

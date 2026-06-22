@@ -32,7 +32,7 @@ Nítido recibe un documento legal (PDF, texto, URL) y devuelve:
 | Frontend | HTML + CSS + Vanilla JS (luego React) |
 | Extensión | Chrome Extension (Manifest V3) |
 | LLM | Google Gemini + Groq |
-| Base de datos | PostgreSQL (Planificado) |
+| Base de datos | PostgreSQL (Integrado con SQLAlchemy) |
 | Vector store | ChromaDB (Integrado para Corpus legal chileno y RAG) |
 | Contenedores | Docker + docker-compose |
 | Despliegue | Vercel (API) + Chrome Web Store |
@@ -43,8 +43,8 @@ Nítido recibe un documento legal (PDF, texto, URL) y devuelve:
 Nitido/
 ├── backend/           # API REST (FastAPI + LLM + RAG)
 │   ├── app/
-│   │   ├── services/  # parser, summarizer, risk_detector, corpus
-│   │   ├── models/    # Pydantic schemas
+│   │   ├── services/  # parser (con OCR Tesseract), summarizer, risk_detector, corpus
+│   │   ├── models/    # Pydantic schemas y database.py (SQLAlchemy)
 │   │   ├── api/       # Endpoints REST
 │   │   └── reglas.json # Motor de reglas de riesgo (Ley 19.496)
 │   └── data/          # Volumen montado para ChromaDB y recursos

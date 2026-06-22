@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.routes import router
 from app.config import settings
+from app.models.database import init_db
 
 logging.basicConfig(
     level=getattr(logging, settings.log_level.upper(), logging.INFO),
@@ -15,6 +16,7 @@ logger = logging.getLogger(__name__)
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     logger.info("Iniciando Nítido API en modo %s", "MOCK (sin API keys)" if settings.mock_mode else "PRODUCCIÓN")
+    await init_db()
     yield
     logger.info("Nítido API detenido")
 

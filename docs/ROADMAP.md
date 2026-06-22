@@ -13,7 +13,7 @@ Semestre: Noviembre 2025 — Febrero 2026
 ## Diciembre
 - [x] Chrome extension funcional
 - [x] Corpus legal chileno (vector store RAG con ChromaDB)
-- Tests del backend
+- [x] Tests del backend (corregidos y funcionales)
 - Despliegue en Vercel/Render
 
 ## Enero

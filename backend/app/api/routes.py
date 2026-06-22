@@ -1,6 +1,9 @@
 import logging
 from fastapi import APIRouter, HTTPException, UploadFile, File, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import select
 from app.models.schemas import AnalisisRequest, AnalisisResponse, ClausulaResult, ErrorResponse
+from app.models.database import get_db, DocumentAnalysis
 from app.services.parser import DocumentParser
 from app.services.risk_detector import RiskDetector
 from app.services.corpus import CorpusLegal
@@ -23,7 +26,7 @@ summarizer = LegalSummarizer(settings.gemini_api_key, settings.groq_api_key)
     summary="Analizar documento legal",
     description="Recibe texto legal y devuelve resumen, cláusulas de riesgo, glosario y recomendaciones.",
 )
-async def analizar_documento(request: AnalisisRequest):
+async def analizar_documento(request: AnalisisRequest, db: AsyncSession = Depends(get_db)):
     contenido = request.contenido.strip()
     if len(contenido) < 10:
         raise HTTPException(400, detail="El documento debe tener al menos 10 caracteres")
@@ -56,7 +59,7 @@ async def analizar_documento(request: AnalisisRequest):
                 sugerencia=c.get("sugerencia"),
             ))
 
-        return AnalisisResponse(
+        response = AnalisisResponse(
             resumen=resumen_data.get("resumen", "No se pudo generar resumen."),
             clausulas=clausulas_result,
             glosario=resumen_data.get("glosario", {}),
@@ -64,6 +67,17 @@ async def analizar_documento(request: AnalisisRequest):
             total_clausulas=len(clausulas_result),
             recomendaciones=resumen_data.get("recomendaciones", []),
         )
+
+        # Guardar en base de datos
+        db_analysis = DocumentAnalysis(
+            content_preview=contenido[:500],
+            risk_score=response.puntaje_riesgo,
+            result_json=response.model_dump()
+        )
+        db.add(db_analysis)
+        await db.commit()
+
+        return response
     except HTTPException:
         raise
     except Exception as e:
@@ -76,7 +90,7 @@ async def analizar_documento(request: AnalisisRequest):
     summary="Analizar documento PDF",
     description="Sube un PDF con texto legal y recibe el análisis completo.",
 )
-async def analizar_pdf(file: UploadFile = File(...)):
+async def analizar_pdf(file: UploadFile = File(...), db: AsyncSession = Depends(get_db)):
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(400, detail="Solo se aceptan archivos PDF")
 
@@ -87,7 +101,7 @@ async def analizar_pdf(file: UploadFile = File(...)):
             raise HTTPException(422, detail="No se pudo extraer texto del PDF. Asegúrate de que contenga texto seleccionable.")
 
         logger.info("PDF procesado: %s (%d caracteres)", file.filename, len(texto))
-        return await analizar_documento(AnalisisRequest(contenido=texto))
+        return await analizar_documento(AnalisisRequest(contenido=texto), db)
     except HTTPException:
         raise
     except Exception as e:
@@ -98,7 +112,25 @@ async def analizar_pdf(file: UploadFile = File(...)):
 @router.get("/corpus", summary="Listar documentos del corpus legal")
 async def listar_corpus():
     corpus.cargar()
-    return {
-        "documentos": list(corpus.documentos.keys()),
-        "total": len(corpus.documentos),
-    }
+    if not corpus.collection:
+        return {"documentos": [], "total": 0}
+        
+    try:
+        data = corpus.collection.get()
+        fuentes = list(set([m["fuente"] for m in data.get("metadatas", [])])) if data.get("metadatas") else []
+        return {
+            "documentos": fuentes,
+            "total": len(fuentes),
+        }
+    except Exception:
+        return {"documentos": [], "total": 0}
+
+@router.get("/historial", summary="Obtener historial de análisis")
+async def obtener_historial(db: AsyncSession = Depends(get_db)):
+    try:
+        result = await db.execute(select(DocumentAnalysis).order_by(DocumentAnalysis.created_at.desc()).limit(10))
+        historial = result.scalars().all()
+        return [{"id": h.id, "preview": h.content_preview, "risk_score": h.risk_score, "date": h.created_at} for h in historial]
+    except Exception as e:
+        logger.error("Error al obtener historial: %s", e)
+        raise HTTPException(500, detail="Error al acceder a la base de datos")
